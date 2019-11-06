@@ -1,0 +1,13 @@
+################LINEAR REGRESSION MODEL(ML)##################################
+from sklearn.linear_model import LinearRegression# import model
+from sklearn.model_selection import train_test_split
+#from sklearn.datasets import load_iris
+train_set, test_set=train_test_split(df_final_code, test_size=0.2, random_state=42)
+
+######## separating dataset for train #########
+X=train_set.drop('median_house_value', axis=1)
+y=train_set['median_house_value']
+
+########## separating dataset for test ##########
+X_test=test_set.drop('median_house_value',axis=1)
+y_test=test_set['median_house_value']
