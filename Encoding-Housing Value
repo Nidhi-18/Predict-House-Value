@@ -1,0 +1,31 @@
+#############encoding the categorical data##################################
+#############strategy 1#################
+bucket=df.select_dtypes(include=object)#to separate categorical dataset
+dummy_data=pd.get_dummies(bucket)
+
+#########strategy 2#####################
+df_final=pd.get_dummies(df_final)
+df_final_code=df_final.to_csv('_clean_data_case1.csv_')
+##############################################################################
+
+################## READ CSV CLEANED DATA ########################
+df_final_code=pd.read_csv('_clean_data_case1.csv_')
+#removes extra index
+df_final_code.drop(df_final_code.columns[0], axis=1, inplace=True)
+
+############# encoding the categorical data ##################################
+############# strategy 1 #################
+bucket=df.select_dtypes(include=object)#to separate categorical dataset
+dummy_data=pd.get_dummies(bucket)
+
+######### strategy 2 #####################
+df_final=pd.get_dummies(df_final)
+df_final_code=df_final.to_csv('_clean_data_case1.csv_')
+##############################################################################
+
+################## READ CSV CLEANED DATA ########################
+df_final_code=pd.read_csv('_clean_data_case1.csv_')
+#removes extra index
+df_final_code.drop(df_final_code.columns[0], axis=1, inplace=True)
+
+
