@@ -1,0 +1,96 @@
+###################################IMPORTING PACKAGES###################
+import pandas as pd
+import numpy as np
+#########################################################################
+df=pd.read_csv("case_study_preprocessing_L1.csv")#READING CSV USING PANDAS
+df.columns=['long','lat','house-median-age','total-rooms','total-bedrooms','population','household','income-median','house-median-value','OC-prox']#CHANGING COLUMNS NAME
+#KNOWING THEIR DATA TYPES
+df.dtypes
+
+#SAVING FILE AS CSV
+df.to_excel("case_study_preprocessing_L1.xlsx")#SAVING CSV FILE TO EXCEL FILE
+
+#MAKING DISPLAY OF FIRST 5 ROWS OF DATAFRAME
+df.head()
+df2=df.describe()#HAVING STATISTICAL DATA
+df.describe().to_csv("case_study_preprocessing_L2.csv")#SAVING STATISTICAL DATA TO CSV FILE
+df.shape#RETURNS A TUPLE REPRESENTING DIMENSIONALITY OF DATAFRAME
+df.groupby('longitude').count()#SPLITS DATA INTO GROUPS BASED ON COUNT
+
+df['housing_median_age'].count#COUNT NON-NAN CELLS FOR EACH COLUMN AND ROWS
+df.size#RETURNS INT REPRESENTING NUMBER OF ELEMENTS IN THIS OBJECT
+df.skew()#IT SHOWS HOW MUCH IT IS SHIFTED FROM MEAN VALUE(SHOWS UNBIASED SKEW OVER REQUESTED AXIS)
+df.corr()#COMPUTE PAIRWISE CORRELATION OF COLUMN, EXCLUDING NA VALUES 
+df1=df.corr()
+
+df1.to_csv("corelation_case_study.csv")
+
+df.mean()#RETURNS MEAN VALUES OF DATAFRAMES
+df.median()#RETURNS MEDIAN VALUES OF DATAFRAMES
+df.mode()#RETURNS MODE VALUES OF DATAFRAMES
+
+df['long'].mean()#RETURNS MEAN VALUES FOR LONG COLUMN
+df.hist()#RETURNS HISTOGRAM GRAPH FOR EVERY COLUMN
+df['long'].hist()#RETURNS HISTOGRAM GRAPH FOR LONG COLUMN
+df.boxplot(column=['lat'])#RETURNS BOXPLOT FOR COLUMN LAT
+df.boxplot(column=['long'])#RETURNS BOXPLOT FOR LONG COLUMN
+df.boxplot(column=['total-rooms'])#RETURNS BOXPLOT FOR TOTAL-ROOMS
+
+#FILLING IT WITH MEDIAN VALUES
+med=df['total_bedrooms'].median()
+df['total_bedrooms'].fillna(med,inplace=True)
+df.isnull().sum(axis = 0)#checking nan values
+
+#droping 1 outlier in median income column
+df.dropna(subset=['median_income'], inplace=True)
+df.isnull().sum(axis = 0)#checking droped value
+
+################## DEFINING A FUNCTION FOR OUTPUT AS ARRAY OF OUTLIERS #####################
+def outliers_iqr(df):
+    quartile_1, quartile_3 = np.percentile(df, [25, 75])
+    iqr = quartile_3 - quartile_1
+    lower_bound = quartile_1 - (iqr * 1.5)
+    upper_bound = quartile_3 + (iqr * 1.5)
+    return np.where((df > upper_bound) | (df < lower_bound))
+
+outliers_iqr(df['median_house_value'])
+outliers_iqr(df['housing_median_age'])
+outliers_iqr(df['total_rooms'])
+outliers_iqr(df['total_bedrooms'])
+outliers_iqr(df['population'])
+outliers_iqr(df['households'])
+outliers_iqr(df['median_income'])
+outliers_iqr(df['latitude'])
+outliers_iqr(df['longitude'])
+
+###########################################################################################
+# REMOVES OUTLIERS
+ 
+q1=df.quantile(0.25)
+q3=df.quantile(0.75)
+iqr=q3-q1
+df_0=df[~((df<(q1-1.5*iqr))|(df>(q3+1.5*iqr))).any(axis=1)]
+df_final=df_0.reset_index(drop=True)
+
+############ CONVERTING CATEGORICAL DATA TO CONTINUOUS #############
+df_final=pd.get_dummies(df_final)
+df_final_code=df_final.to_csv('_clean_data_case1.csv_')
+##############################################################################
+
+################## READ CSV CLEANED DATA ########################
+df_final_code=pd.read_csv('_clean_data_case1.csv_')
+#removes extra index
+df_final_code.drop(df_final_code.columns[0], axis=1, inplace=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
